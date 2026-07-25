@@ -11,7 +11,7 @@
     <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
 
     <p class="text-center my-4">
-        Загрузите один или несколько файлов и получите короткие ссылки для скачивания
+        Загрузите файлы и получите на них короткие ссылки
     </p>
 
     <div class="container">
@@ -54,40 +54,40 @@
 
     <div class="container mt-5">
 
-        <h5 class="text-center mb-4">
-            Файлы успешно загружены
-        </h5>
+        <div class="row justify-content-center">
 
-        <table class="table table-striped table-hover">
+            <div class="col-lg-8">
 
-            <thead>
-                <tr>
-                    <th>Имя файла</th>
-                    <th>Короткая ссылка</th>
-                </tr>
-            </thead>
+                <table class="table">
 
-            <tbody>
+                    <tbody>
 
-            {% for file in uploaded %}
+                    {% for file in uploaded %}
 
-                <tr>
+                        <tr>
 
-                    <td>{{ file.name }}</td>
+                            <td class="align-middle">
+                                {{ file.name }}
+                            </td>
 
-                    <td>
-                        <a href="{{ file.short_link }}">
-                            {{ file.short_link }}
-                        </a>
-                    </td>
+                            <td class="text-end align-middle">
+                        
+                                <a href="{{ file.short_link }}">
+                                    {{ file.short_link }}
+                                </a>
+                            </td>
 
-                </tr>
+                        </tr>
 
-            {% endfor %}
+                    {% endfor %}
 
-            </tbody>
+                    </tbody>
 
-        </table>
+                </table>
+
+            </div>
+        
+        </div>
 
     </div>
 
