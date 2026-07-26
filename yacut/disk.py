@@ -11,8 +11,10 @@ from .constants import (
 
 load_dotenv()
 
+DISK_TOKEN = os.getenv('DISK_TOKEN')
+
 AUTH_HEADERS = {
-    'Authorization': f'OAuth {os.getenv("DISK_TOKEN")}'
+    'Authorization': f'OAuth {DISK_TOKEN}'
 }
 
 
@@ -26,8 +28,8 @@ async def get_upload_link(session, filename):
         }
     )
 
-    data = await response.json()
-    return data['href']
+    response_data = await response.json()
+    return response_data['href']
 
 
 async def upload_file(session, upload_url, file):
@@ -52,9 +54,9 @@ async def get_download_link(session, path):
         }
     )
 
-    data = await response.json()
+    response_data = await response.json()
 
-    return data['href']
+    return response_data['href']
 
 
 async def upload_to_disk(file):

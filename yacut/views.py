@@ -1,16 +1,14 @@
-import asyncio
-
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, url_for
 
 from . import app, db
 from .forms import URLMapForm, FilesForm
 from .models import URLMap
-from .utils import get_unique_short_id
+from .short_id import get_unique_short_id
 from .constants import DUPLICATE_MESSAGE
 from .disk import upload_to_disk
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=('GET', 'POST'))
 def index_view():
     form = URLMapForm()
     message = None
@@ -29,11 +27,10 @@ def index_view():
             short_id = get_unique_short_id()
 
         if message is None:
-            url_map = URLMap(
+            URLMap.create(
                 original=form.original_link.data,
                 short=short_id
             )
-            db.session.add(url_map)
             db.session.commit()
 
             short_link = url_for(
@@ -56,36 +53,32 @@ def redirect_view(short_id):
     return redirect(url_map.original)
 
 
-@app.route('/files', methods=['GET', 'POST'])
-def files_view():
+@app.route('/files', methods=('GET', 'POST'))
+async def files_view():
     form = FilesForm()
 
     uploaded = []
 
     if form.validate_on_submit():
 
-        files = request.files.getlist('files')
+        files = form.files.data
 
         for file in files:
 
-            download_link = asyncio.run(
-                upload_to_disk(file)
-            )
+            download_link = await upload_to_disk(file)
 
-            short = get_unique_short_id()
+            short_id = get_unique_short_id()
 
-            url_map = URLMap(
+            URLMap.create(
                 original=download_link,
-                short=short
+                short=short_id
             )
-
-            db.session.add(url_map)
 
             uploaded.append({
                 'name': file.filename,
                 'short_link': url_for(
                     'redirect_view',
-                    short_id=short,
+                    short_id=short_id,
                     _external=True
                 )
             })

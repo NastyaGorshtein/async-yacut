@@ -7,6 +7,8 @@ ALLOWED_SYMBOLS = (
     '0123456789'
 )
 
+SHORT_ID_PATTERN = r'^[A-Za-z0-9]*$'
+
 INVALID_NAME_MESSAGE = 'Указано недопустимое имя для короткой ссылки'
 
 NO_BODY_MESSAGE = 'Отсутствует тело запроса'

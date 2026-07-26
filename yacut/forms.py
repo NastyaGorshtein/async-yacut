@@ -1,23 +1,12 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import MultipleFileField, FileRequired
 from wtforms import StringField, SubmitField, URLField
-from wtforms.validators import DataRequired, Length, Optional, ValidationError
+from wtforms.validators import DataRequired, Length, Optional, Regexp
 
 from .constants import (
-    ALLOWED_SYMBOLS,
+    SHORT_ID_PATTERN,
     MAX_CUSTOM_ID_LENGTH
 )
-
-
-def validate_custom_id(form, field):
-    if not field.data:
-        return
-
-    for symbol in field.data:
-        if symbol not in ALLOWED_SYMBOLS:
-            raise ValidationError(
-                'Допустимы только латинские буквы и цифры'
-            )
 
 
 class URLMapForm(FlaskForm):
@@ -33,7 +22,10 @@ class URLMapForm(FlaskForm):
         validators=[
             Optional(),
             Length(max=MAX_CUSTOM_ID_LENGTH),
-            validate_custom_id
+            Regexp(
+                SHORT_ID_PATTERN,
+                message='Допустимы только латинские буквы и цифры'
+            )
         ]
     )
 
